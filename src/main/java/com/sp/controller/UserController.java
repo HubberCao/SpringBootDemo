@@ -1,8 +1,6 @@
 package com.sp.controller;
 
-import com.sp.exception.GlobalException;
-import com.sp.exception.ParamException;
-import com.sp.exception.ServerException;
+import com.sp.config.exception.GlobalException;
 import com.sp.service.UserService;
 import com.sp.vo.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;

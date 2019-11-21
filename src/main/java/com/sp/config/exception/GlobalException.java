@@ -1,4 +1,4 @@
-package com.sp.exception;
+package com.sp.config.exception;
 
 import lombok.Getter;
 import lombok.Setter;

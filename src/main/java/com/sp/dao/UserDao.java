@@ -1,6 +1,6 @@
 package com.sp.dao;
 
-import com.sp.model.User;
+import com.sp.bean.model.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;

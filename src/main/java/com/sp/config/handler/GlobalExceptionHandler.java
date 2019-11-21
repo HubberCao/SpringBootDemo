@@ -1,6 +1,6 @@
-package com.sp.handler;
+package com.sp.config.exception.handler;
 
-import com.sp.exception.GlobalException;
+import com.sp.config.exception.GlobalException;
 import com.sp.vo.ResponseData;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

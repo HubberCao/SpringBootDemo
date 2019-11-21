@@ -1,4 +1,4 @@
-package com.sp.model;
+package com.sp.bean.model;
 
 import lombok.Builder;
 import lombok.Getter;

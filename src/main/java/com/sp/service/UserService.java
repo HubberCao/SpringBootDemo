@@ -1,6 +1,6 @@
 package com.sp.service;
 
-import com.sp.model.User;
+import com.sp.bean.model.User;
 
 public interface UserService {
 
