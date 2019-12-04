@@ -9,20 +9,16 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>springboot-kafka</artifactId>
+    <artifactId>springboot-core</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
-    <description>kafka module of Spring Boot Demo</description>
+    <description>core module of Spring Boot Demo</description>
 
     <properties>
         <skip_maven_deploy>false</skip_maven_deploy>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
 
 
     </dependencies>

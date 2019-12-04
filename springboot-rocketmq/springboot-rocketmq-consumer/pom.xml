@@ -2,30 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.sp</groupId>
-        <artifactId>SpringBootDemo-parent</artifactId>
+        <artifactId>springboot-rocketmq</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>springboot-kafka</artifactId>
-    <packaging>jar</packaging>
+    <artifactId>springboot-rocketmq-consumer</artifactId>
     <name>${project.artifactId}</name>
-    <description>kafka module of Spring Boot Demo</description>
+    <description>rocketmq consumer module of Spring Boot Demo</description>
 
     <properties>
-        <skip_maven_deploy>false</skip_maven_deploy>
+
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>4.5.0</version>
         </dependency>
-
-
     </dependencies>
-
 
 </project>
