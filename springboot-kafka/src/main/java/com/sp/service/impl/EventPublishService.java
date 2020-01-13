@@ -36,7 +36,7 @@ public class EventPublishService {
             List<Long> ids = sendEventPublish(eventPublishes);
             if (!CollectionUtils.isEmpty(ids)) {
                 //更新状态为PUBLISHED
-                eventPublishDao.updateStatus(ids, EventPublishStatus.PUBLISHED.name());
+                //eventPublishDao.updateStatus(ids, EventPublishStatus.PUBLISHED.name());
             }
         }
     }

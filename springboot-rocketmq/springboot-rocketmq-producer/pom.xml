@@ -22,6 +22,12 @@
             <artifactId>rocketmq-client</artifactId>
             <version>4.5.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.sp</groupId>
+            <artifactId>springboot-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>
