@@ -29,7 +29,7 @@ import java.util.Map;
  * Ack机制确认消费
  * Created by admin on 2019/11/24.
  */
-@Component
+//@Component
 @Slf4j
 public class AckListener {
 

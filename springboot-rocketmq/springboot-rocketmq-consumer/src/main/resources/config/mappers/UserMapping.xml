@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sp.dao.master.UserDao">
+
+    <resultMap type="com.sp.bean.model.User" id="userResultMap">
+        <id property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <!-- 新增并返回主键ID -->
+    <insert id="save" parameterType="com.sp.bean.model.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_user (user_name, create_time)
+        VALUES (#{userName},  #{createTime})
+    </insert>
+
+
+</mapper>

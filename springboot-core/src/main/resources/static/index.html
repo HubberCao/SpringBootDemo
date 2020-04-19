@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+   <script>
+        /*var xhr =  new XMLHttpRequest()
+        document.cookie = 'name=TOM' // cookie不能跨域
+        xhr.withCredentials =  true // 前端设置是否带cookie
+        xhr.open('GET', 'http://localhost:8080/user/query', true)
+        xhr.setRequestHeader('name', 'TOM')
+        xhr.onreadystatechange =  function() {
+            if (xhr.readyState === 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
+                    console.log(xhr.response)
+                    //得到响应头，后台需设置Access-Control-Expose-Headers
+                    console.log(xhr.getResponseHeader('name'))
+                }
+            }
+        }
+        xhr.send();*/
+
+        var http = {};
+        http.quest = function (option, callback) {
+            var url = option.url;
+            var method = option.method;
+            var data = option.data;
+            var timeout = option.timeout || 0;
+            var xhr = new XMLHttpRequest();
+            (timeout > 0) && (xhr.timeout = timeout);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if (xhr.status >= 200 && xhr.status < 400) {
+                        var result = xhr.responseText;
+                        try { result = JSON.parse(xhr.responseText); } catch (e) { }
+                        callback && callback(null, result);
+                    } else {
+                        callback && callback('status: ' + xhr.status);
+                    }
+                }
+            }.bind(this);
+            xhr.open(method, url, true);
+            if (typeof data === 'object') {
+                try {
+                    data = JSON.stringify(data);
+                } catch (e) { }
+            }
+            xhr.send(data);
+            xhr.ontimeout = function () {
+                callback && callback('timeout');
+                console.log('%c连%c接%c超%c时', 'color:red', 'color:orange', 'color:purple', 'color:green');
+            };
+        };
+        http.get = function (url, callback) {
+            var option = url.url ? url : { url: url };
+            option.method = 'get';
+            this.quest(option, callback);
+        };
+        http.post = function (option, callback) {
+            option.method = 'post';
+            this.quest(option, callback);
+        };
+
+        //普通get请求
+        http.get('https://localhost:8443/user/query', function (err, result) {
+            alert("result:" + result);
+        });
+    </script>
+</head>
+<body>
+    hello core
+    <!--<iframe  src="http://localhost:8080/user/query" frameborder="0" onload="load()" id="iframe"></iframe>
+    <script>
+        var first =  true
+        // onload事件会触发2次，第1次加载跨域页，并留存数据于window.name
+        function load() {
+            if(first){
+                // 第1次onload(跨域页)成功后，切换到同域代理页面
+                var iframe =  document.getElementById('iframe');
+                iframe.src = 'http://localhost:8090/index.html';
+                first =  false;
+            }else{
+                // 第2次onload(同域b.html页)成功后，读取同域window.name中数据
+                console.log(iframe.contentWindow.name);
+            }
+        }
+    </script>-->
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.sp.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -15,8 +16,10 @@ import java.util.concurrent.TimeUnit;
  * redis 工具类
  * Created by admin on 2019/12/10.
  */
+
 @Component
 public class RedisUtils {
+
     /**
      * 注入redisTemplate bean
      */
@@ -43,6 +46,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 根据key获取过期时间
      *
@@ -68,22 +72,26 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 删除缓存
      *
      * @param key 可以传一个值 或多个
      */
     @SuppressWarnings("unchecked")
-    public void del(String... key) {
+    public boolean del(String... key) {
         if (key != null && key.length > 0) {
             if (key.length == 1) {
-                redisTemplate.delete(key[0]);
+                return redisTemplate.delete(key[0]);
             } else {
-                redisTemplate.delete(CollectionUtils.arrayToList(key));
+                Long res = redisTemplate.delete(CollectionUtils.arrayToList(key));
+                return res != null && res > 0;
             }
         }
+        return false;
     }
     // ============================String(字符串)=============================
+
 
     /**
      * 普通缓存获取
@@ -94,6 +102,7 @@ public class RedisUtils {
     public Object get(String key) {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }
+
 
     /**
      * 普通缓存放入
@@ -112,6 +121,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 普通缓存放入并设置时间
      *
@@ -120,7 +130,7 @@ public class RedisUtils {
      * @param time  时间(秒) time要大于0 如果time小于等于0 将设置无限期
      * @return true成功 false 失败
      */
-    public boolean set(String key, Object value, long time) {
+    public boolean set(String key, Object value, int time) {
         try {
             if (time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
@@ -133,6 +143,7 @@ public class RedisUtils {
             return false;
         }
     }
+
 
     /**
      * 递增
@@ -147,6 +158,7 @@ public class RedisUtils {
         }
         return redisTemplate.opsForValue().increment(key, delta);
     }
+
 
     /**
      * 递减
@@ -163,6 +175,7 @@ public class RedisUtils {
     }
     // ================================Hash(哈希)=================================
 
+
     /**
      * HashGet
      *
@@ -174,6 +187,7 @@ public class RedisUtils {
         return redisTemplate.opsForHash().get(key, item);
     }
 
+
     /**
      * 获取hashKey对应的所有键值
      *
@@ -183,6 +197,7 @@ public class RedisUtils {
     public Map<Object, Object> hmget(String key) {
         return redisTemplate.opsForHash().entries(key);
     }
+
 
     /**
      * HashSet
@@ -200,6 +215,7 @@ public class RedisUtils {
             return false;
         }
     }
+
 
     /**
      * HashSet 并设置时间
@@ -222,6 +238,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 向一张hash表中放入数据,如果不存在将创建
      *
@@ -239,6 +256,7 @@ public class RedisUtils {
             return false;
         }
     }
+
 
     /**
      * 向一张hash表中放入数据,如果不存在将创建
@@ -262,6 +280,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 删除hash表中的值
      *
@@ -271,6 +290,7 @@ public class RedisUtils {
     public void hdel(String key, Object... item) {
         redisTemplate.opsForHash().delete(key, item);
     }
+
 
     /**
      * 判断hash表中是否有该项的值
@@ -282,6 +302,7 @@ public class RedisUtils {
     public boolean hHasKey(String key, String item) {
         return redisTemplate.opsForHash().hasKey(key, item);
     }
+
 
     /**
      * hash递增 如果不存在,就会创建一个 并把新增后的值返回
@@ -295,6 +316,7 @@ public class RedisUtils {
         return redisTemplate.opsForHash().increment(key, item, by);
     }
 
+
     /**
      * hash递减
      *
@@ -307,6 +329,7 @@ public class RedisUtils {
         return redisTemplate.opsForHash().increment(key, item, -by);
     }
     // ============================Set(集合)=============================
+
 
     /**
      * 根据key获取Set中的所有值
@@ -322,6 +345,7 @@ public class RedisUtils {
             return null;
         }
     }
+
 
     /**
      * 根据value从一个set中查询,是否存在
@@ -339,6 +363,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 将数据放入set缓存
      *
@@ -354,6 +379,7 @@ public class RedisUtils {
             return 0;
         }
     }
+
 
     /**
      * 将set数据放入缓存
@@ -375,6 +401,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 获取set缓存的长度
      *
@@ -389,6 +416,7 @@ public class RedisUtils {
             return 0;
         }
     }
+
 
     /**
      * 移除值为value的
@@ -408,6 +436,7 @@ public class RedisUtils {
     }
     // ===============================List(列表)=================================
 
+
     /**
      * 获取list缓存的内容
      *
@@ -425,6 +454,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 获取list缓存的长度
      *
@@ -439,6 +469,7 @@ public class RedisUtils {
             return 0;
         }
     }
+
 
     /**
      * 通过索引 获取list中的值
@@ -456,6 +487,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 将list放入缓存
      *
@@ -472,6 +504,7 @@ public class RedisUtils {
             return false;
         }
     }
+
 
     /**
      * 将list放入缓存
@@ -493,6 +526,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 将list放入缓存
      *
@@ -500,7 +534,7 @@ public class RedisUtils {
      * @param value 值
      * @return
      */
-    public boolean lSet(String key, List <Object> value) {
+    public boolean lSet(String key, List<Object> value) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             return true;
@@ -510,6 +544,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 将list放入缓存
      *
@@ -518,7 +553,7 @@ public class RedisUtils {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, List <Object> value, long time) {
+    public boolean lSet(String key, List<Object> value, long time) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             if (time > 0)
@@ -529,6 +564,11 @@ public class RedisUtils {
             return false;
         }
     }
+
+    public ZSetOperations getZSet() {
+        return redisTemplate.opsForZSet();
+    }
+
 
     /**
      * 根据索引修改list中的某条数据
@@ -548,6 +588,7 @@ public class RedisUtils {
         }
     }
 
+
     /**
      * 移除N个值为value
      *
@@ -565,4 +606,5 @@ public class RedisUtils {
             return 0;
         }
     }
+
 }

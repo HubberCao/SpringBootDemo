@@ -26,8 +26,8 @@ import java.util.Map;
  * Kafka 配置类
  * Created by admin on 2019/11/23.
  */
-@Configuration
-@EnableKafka
+//@Configuration
+//@EnableKafka
 @Slf4j
 public class KafkaConfig {
 

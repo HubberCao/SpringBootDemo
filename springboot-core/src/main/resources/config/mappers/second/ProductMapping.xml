@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sp.dao.second.ProductDao">
+
+    <resultMap type="com.sp.bean.model.Product" id="prodResultMap">
+        <id property="id" column="id"/>
+        <result property="name" column="prod_name"/>
+        <result property="desc" column="content"/>
+    </resultMap>
+
+    <insert id="save" parameterType="com.sp.bean.model.Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (prod_name, content)
+        VALUES (#{name},  #{desc})
+    </insert>
+
+    <select id="findByName" resultMap="prodResultMap">
+        select * from product t
+        where t.prod_name = #{name}
+    </select>
+
+
+</mapper>

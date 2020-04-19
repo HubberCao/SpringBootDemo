@@ -47,7 +47,6 @@ public class ConsumerHandler implements CommandLineRunner {
                 return status;
             }
         });
-
         // 启动使用者实例
         consumer.start();
         log.info("消费端开始消费消息");

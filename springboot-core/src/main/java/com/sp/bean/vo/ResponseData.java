@@ -24,7 +24,27 @@ public class ResponseData implements Serializable {
         this.data = data;
     }
 
+    public ResponseData(boolean status, int code, String message, Object data) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    public ResponseData(boolean status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
     public static ResponseData ok(Object data) {
         return new ResponseData(data);
+    }
+
+    public static ResponseData fail(String message) {
+        return new ResponseData(false,  message);
+    }
+
+    public static ResponseData fail(String message, Object data) {
+        return new ResponseData(false, ResponseCode.SERVER_ERROR_CODE.getCode(), message, data);
     }
 }

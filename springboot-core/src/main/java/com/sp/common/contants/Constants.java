@@ -23,4 +23,13 @@ public class Constants {
     public static final String TOPIC_BATCH = "topic.batch";
 
     public static final String GROUPID_DEFAULT = "consumer-default";
+
+    public static final String ACCESS_TOKEN = "access_token";
+
+    public static final String NO_REPEAT_TOKEN = "no_repeat_token";
+
+    public static class Redis {
+        public static final String TOKEN_PREFIX = "token_";
+    }
+
 }

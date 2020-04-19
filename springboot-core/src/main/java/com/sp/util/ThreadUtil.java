@@ -26,4 +26,16 @@ public class ThreadUtil {
         return executorService;
     }
 
+    public static void closeExecutor(ExecutorService executor) {
+        //处理完成后关闭线程池
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 }

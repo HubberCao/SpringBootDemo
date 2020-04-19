@@ -4,13 +4,15 @@ package com.sp.util;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by admin on 2019/12/10.
  */
 @Component
-public class SpringBeanUtil implements ApplicationContextAware{
+public class SpringBeanUtil implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -52,5 +54,9 @@ public class SpringBeanUtil implements ApplicationContextAware{
      */
     public static <T> T getBean(String beanName, Class<T> beanClass) {
         return getApplicationContext().getBean(beanName, beanClass);
+    }
+
+    public static void close() {
+        ((AnnotationConfigApplicationContext)applicationContext).registerShutdownHook();
     }
 }

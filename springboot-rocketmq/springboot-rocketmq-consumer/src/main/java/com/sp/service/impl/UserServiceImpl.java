@@ -1,7 +1,7 @@
 package com.sp.service.impl;
 
 import com.sp.bean.model.User;
-import com.sp.dao.UserDao;
+import com.sp.dao.master.UserDao;
 import com.sp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

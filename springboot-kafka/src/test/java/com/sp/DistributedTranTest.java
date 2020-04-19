@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by admin on 2019/12/2.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = Application.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = KafkaApplication.class)
 public class DistributedTranTest {
 
     @Autowired

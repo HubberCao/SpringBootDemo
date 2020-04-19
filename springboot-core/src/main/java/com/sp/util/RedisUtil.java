@@ -1,16 +1,12 @@
 package com.sp.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +14,8 @@ import java.util.concurrent.TimeUnit;
  * redis 工具类
  * Created by admin on 2019/12/10.
  */
+
+@Slf4j
 public class RedisUtil {
 
     private RedisTemplate<String, Object> redisTemplate = (RedisTemplate<String, Object>)SpringBeanUtil.getBean("redisTemplate");
@@ -32,43 +30,9 @@ public class RedisUtil {
         private static RedisUtil redisUtil = new RedisUtil();
     }
 
-    private static final String LOCK_PREFIX = "";
 
-    private static final long LOCK_EXPIRE = 500;
 
-    /**
-     * 最终加强分布式锁
-     * @param key key值
-     * @return 是否获取到
-     */
-    public boolean lock(String key) {
-        String lock = LOCK_PREFIX + key;
-        // 利用lambda表达式
-        return (Boolean) redisTemplate.execute(new RedisCallback<Object>() {
-            @Override
-            public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
-                long expireAt = System.currentTimeMillis() + LOCK_EXPIRE + 1;
-                Boolean acquire = redisConnection.setNX(lock.getBytes(), String.valueOf(expireAt).getBytes());
-                if (acquire) {
-                    return true;
-                } else {
-                    byte[] value = redisConnection.get(lock.getBytes());
-                    if (Objects.nonNull(value) && value.length > 0) {
-                        long expireTime = Long.parseLong(new String(value));
-                        if (expireTime < System.currentTimeMillis()) {
-                            // 如果锁已经过期
-                            byte[] oldValue = redisConnection.getSet(lock.getBytes(), String.valueOf(System.currentTimeMillis() + LOCK_EXPIRE + 1).getBytes());
-                            // 防止死锁
-                            return Long.parseLong(new String(oldValue)) < System.currentTimeMillis();
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-    }
-
-    /**
+/**
      * 指定缓存失效时间
      *
      * @param key  键
@@ -87,7 +51,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 根据key获取过期时间
      *
      * @param key 键 不能为null
@@ -97,7 +61,7 @@ public class RedisUtil {
         return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
-    /**
+/**
      * 判断key是否存在
      *
      * @param key 键
@@ -110,9 +74,10 @@ public class RedisUtil {
             e.printStackTrace();
             return false;
         }
+
     }
 
-    /**
+/**
      * 删除缓存
      *
      * @param key 可以传一个值 或多个
@@ -129,7 +94,7 @@ public class RedisUtil {
     }
     // ============================String(字符串)=============================
 
-    /**
+/**
      * 普通缓存获取
      *
      * @param key 键
@@ -139,7 +104,7 @@ public class RedisUtil {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 
-    /**
+/**
      * 普通缓存放入
      *
      * @param key   键
@@ -156,7 +121,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 普通缓存放入并设置时间
      *
      * @param key   键
@@ -178,7 +143,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 递增
      *
      * @param key   键
@@ -192,7 +157,7 @@ public class RedisUtil {
         return redisTemplate.opsForValue().increment(key, delta);
     }
 
-    /**
+/**
      * 递减
      *
      * @param key   键
@@ -207,7 +172,7 @@ public class RedisUtil {
     }
     // ================================Hash(哈希)=================================
 
-    /**
+/**
      * HashGet
      *
      * @param key  键 不能为null
@@ -218,7 +183,7 @@ public class RedisUtil {
         return redisTemplate.opsForHash().get(key, item);
     }
 
-    /**
+/**
      * 获取hashKey对应的所有键值
      *
      * @param key 键
@@ -228,7 +193,7 @@ public class RedisUtil {
         return redisTemplate.opsForHash().entries(key);
     }
 
-    /**
+/**
      * HashSet
      *
      * @param key 键
@@ -245,7 +210,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * HashSet 并设置时间
      *
      * @param key  键
@@ -266,7 +231,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 向一张hash表中放入数据,如果不存在将创建
      *
      * @param key   键
@@ -284,7 +249,8 @@ public class RedisUtil {
         }
     }
 
-    /**
+
+/**
      * 向一张hash表中放入数据,如果不存在将创建
      *
      * @param key   键
@@ -306,7 +272,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 删除hash表中的值
      *
      * @param key  键 不能为null
@@ -316,7 +282,7 @@ public class RedisUtil {
         redisTemplate.opsForHash().delete(key, item);
     }
 
-    /**
+/**
      * 判断hash表中是否有该项的值
      *
      * @param key  键 不能为null
@@ -327,7 +293,7 @@ public class RedisUtil {
         return redisTemplate.opsForHash().hasKey(key, item);
     }
 
-    /**
+/**
      * hash递增 如果不存在,就会创建一个 并把新增后的值返回
      *
      * @param key  键
@@ -339,7 +305,8 @@ public class RedisUtil {
         return redisTemplate.opsForHash().increment(key, item, by);
     }
 
-    /**
+
+/**
      * hash递减
      *
      * @param key  键
@@ -352,7 +319,8 @@ public class RedisUtil {
     }
     // ============================Set(集合)=============================
 
-    /**
+
+/**
      * 根据key获取Set中的所有值
      *
      * @param key 键
@@ -367,7 +335,8 @@ public class RedisUtil {
         }
     }
 
-    /**
+
+/**
      * 根据value从一个set中查询,是否存在
      *
      * @param key   键
@@ -383,7 +352,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 将数据放入set缓存
      *
      * @param key    键
@@ -399,7 +368,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 将set数据放入缓存
      *
      * @param key    键
@@ -419,7 +388,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 获取set缓存的长度
      *
      * @param key 键
@@ -434,7 +403,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 移除值为value的
      *
      * @param key    键
@@ -450,9 +419,10 @@ public class RedisUtil {
             return 0;
         }
     }
+
     // ===============================List(列表)=================================
 
-    /**
+/**
      * 获取list缓存的内容
      *
      * @param key   键
@@ -469,7 +439,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 获取list缓存的长度
      *
      * @param key 键
@@ -484,7 +454,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 通过索引 获取list中的值
      *
      * @param key   键
@@ -500,7 +470,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 将list放入缓存
      *
      * @param key   键
@@ -517,7 +487,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 将list放入缓存
      *
      * @param key   键
@@ -537,7 +507,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 将list放入缓存
      *
      * @param key   键
@@ -554,7 +524,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 将list放入缓存
      *
      * @param key   键
@@ -574,7 +544,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 根据索引修改list中的某条数据
      *
      * @param key   键
@@ -592,7 +562,7 @@ public class RedisUtil {
         }
     }
 
-    /**
+/**
      * 移除N个值为value
      *
      * @param key   键
@@ -609,4 +579,65 @@ public class RedisUtil {
             return 0;
         }
     }
+
+    // ===============================zSet=================================
+
+    public long zSetCount(String key, long min, long max) {
+        return redisTemplate.opsForZSet().count(key, min, max);
+    }
+
+    public Boolean zSetAdd(String key, Object value, double score) {
+        return redisTemplate.opsForZSet().add(key, value, score);
+    }
+
+    public Long zSetRemoveRangeByScore(String key, long min, long max) {
+        return redisTemplate.opsForZSet().removeRangeByScore(key, min, max);
+    }
+
+    public Long zSetRank(String key, Object value) {
+        return redisTemplate.opsForZSet().rank(key, value);
+    }
+
+    public Long zSetRemove(String key, Object... values) {
+        return redisTemplate.opsForZSet().remove(key, values);
+    }
+
+    public void setBit(String key, long offset, boolean value) {
+        redisTemplate.opsForValue().setBit(key, offset, value);
+    }
+
+    public boolean getBit(String key, long offset) {
+        return redisTemplate.opsForValue().getBit(key, offset);
+    }
+
+/**
+     * 相当于pfadd key element
+     * @param key
+     * @param values
+     */
+    public void addHLog(String key, Object... values) {
+        redisTemplate.opsForHyperLogLog().add(key, values);
+    }
+
+/**
+     * 相当于pfcount key
+     * @param keys
+     * @return
+     */
+    public long countHLog(String... keys) {
+        return redisTemplate.opsForHyperLogLog().size(keys);
+    }
+
+    public Long mergeHLog(String destKey, String key1, String key2) {
+        return redisTemplate.opsForHyperLogLog().union(destKey, key1, key2);
+    }
+
+    public long pfAdd(String key, String value) {
+        return redisTemplate.execute((RedisCallback<Long>) con -> con.pfAdd(key.getBytes(), value.getBytes()));
+    }
+
+    public long pfCount(String key) {
+        return redisTemplate.execute((RedisCallback<Long>) con -> con.pfCount(key.getBytes()));
+    }
+
 }
